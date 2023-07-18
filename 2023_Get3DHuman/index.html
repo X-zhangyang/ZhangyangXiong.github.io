@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="description"
+        content="Lifting StyleGAN-Human into a 3D Generative Model using Pixel-aligned Reconstruction Priors.">
+  <meta name="keywords" content="3D Generative Model, PIFu, StyleGAN">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Get3DHuman: Lifting StyleGAN-Human into a 3D Generative Model using Pixel-aligned Reconstruction Priors.</title>
+
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-PYVRSFMDRL"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+
+    function gtag() {
+      dataLayer.push(arguments);
+    }
+
+    gtag('js', new Date());
+
+    gtag('config', 'G-PYVRSFMDRL');
+  </script>
+
+  <link href="https://fonts.googleapis.com/css?family=Google+Sans|Noto+Sans|Castoro"
+        rel="stylesheet">
+
+  <link rel="stylesheet" href="./static/css/bulma.min.css">
+  <link rel="stylesheet" href="./static/css/bulma-carousel.min.css">
+  <link rel="stylesheet" href="./static/css/bulma-slider.min.css">
+  <link rel="stylesheet" href="./static/css/fontawesome.all.min.css">
+  <link rel="stylesheet"
+        href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
+  <link rel="stylesheet" href="./static/css/index.css">
+  <link rel="icon" href="./static/images/favicon.svg">
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script defer src="./static/js/fontawesome.all.min.js"></script>
+  <script src="./static/js/bulma-carousel.min.js"></script>
+  <script src="./static/js/bulma-slider.min.js"></script>
+  <script src="./static/js/index.js"></script>
+</head>
+<body>
+
+<!-- PDF Link. 
+<nav class="navbar" role="navigation" aria-label="main navigation">
+  <div class="navbar-brand">
+    <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false">
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+    </a>
+  </div>
+  <div class="navbar-menu">
+    <div class="navbar-start" style="flex-grow: 1; justify-content: center;">
+      <a class="navbar-item" href="https://x-zhangyang.github.io/">
+      <span class="icon">
+          <i class="fas fa-home"></i>
+      </span>
+      </a>
+
+      <div class="navbar-item has-dropdown is-hoverable">
+        <a class="navbar-link">
+          More Research
+        </a>
+        <div class="navbar-dropdown"> </a>
+          <a class="navbar-item" href="https://github.com/X-zhangyang/Get3DHuman/">
+            Get3DHuman
+          </a>
+          <a class="navbar-item" href="https://github.com/X-zhangyang/Real-World-Masked-Face-Dataset">
+            Masked-Face-Dataset
+          </a>
+          <a class="navbar-item" href="https://github.com/X-zhangyang/Asian-Face-Image-Dataset-AFD-dataset">
+            Aisa-Face-Dataset
+          </a>
+
+        </div>
+      </div>
+    </div>
+
+  </div>
+</nav>
+
+-->
+<section class="hero">
+  <div class="hero-body">
+    <div class="container is-max-desktop">
+      <div class="columns is-centered">
+        <div class="column has-text-centered">
+          <h1 class="title is-3 publication-title">Get3DHuman: Lifting StyleGAN-Human into a 3D Generative Model using Pixel-aligned Reconstruction Priors.</h1>
+          <div class="is-size-6 publication-authors">
+            <span class="author-block">
+              <a href="https://x-zhangyang.github.io/">Zhangyang Xiong</a><sup>1,2</sup>,</span>
+            <span class="author-block">
+              <a href="https://scholar.google.com/citations?user=2ztThPwAAAAJ&hl=zh-CN">Di Kang</a><sup>3</sup>,</span>
+            <span class="author-block">
+              <a href="https://www.linkedin.cn/incareer/in/derong-jin-663561256">Derong Jin</a><sup>2</sup>,
+            </span>
+            <span class="author-block">
+              <a href="http://chenweikai.github.io/">Weikai Chen</a><sup>4</sup>,
+            </span>
+            <span class="author-block">
+              <a href="https://linchaobao.github.io/">Linchao Bao</a><sup>3</sup>,
+            </span>
+            <span class="author-block">
+              <a href="https://sse.cuhk.edu.cn/en/faculty/cuishuguang">Shuguang Cui</a><sup>1,2</sup>,
+            </span>
+            <span class="author-block">
+              <a href="https://gaplab.cuhk.edu.cn/">Xiaoguang Han</a><sup>1,2#</sup>
+            </span>
+          </div>
+          <div class="is-size-4 publication-authors">
+            <span class="author-block"><b>ICCV 2023</b></span>
+          </div>
+          <div class="is-size-5 publication-authors">
+            <span class="author-block"><sup>1</sup>The Future Network of Intelligence Institute, CUHK-Shenzhen</span>
+            <span class="author-block"><sup>2</sup>School of Science and Engineering, CUHK-Shenzhen</span>
+            <span class="author-block"><sup>3</sup>Tencent AI Lab</span>
+            <span class="author-block"><sup>4</sup>Tencent America</span>
+          </div>
+
+          <div class="column has-text-centered">
+            <div class="publication-links">
+              <!-- PDF Link. -->
+              <span class="link-block">
+                <a href="https://arxiv.org/abs/2302.01162"
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                      <i class="fas fa-file-pdf"></i>
+                  </span>
+                  <span>Paper</span>
+                </a>
+              </span>
+              <!-- Video 
+              <span class="link-block">
+                <a href=""
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                      <i class="fab fa-youtube"></i>
+                  </span>
+                  <span>Video</span>
+                </a>
+              </span>
+              Link. -->
+              <!-- Code Link. -->
+              <span class="link-block">
+                <a href="https://github.com/X-zhangyang/Get3DHuman/"
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                      <i class="fab fa-github"></i>
+                  </span>
+                  <span>Code (Coming soon)</span>
+                  </a>
+              </span>
+              <!-- Dataset Link. -->
+              <span class="link-block">
+                <a href="https://github.com/X-zhangyang/Get3DHuman/"
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                      <i class="far fa-images"></i>
+                  </span>
+                  <span>Data (Coming soon)</span>
+                  </a>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<section class="section">
+  <div class="container is-max-desktop">
+    <div class="columns is-centered">
+    <!-- teaser. -->
+    <div class="columns is-centered">
+      <div class="column is-full-width">
+            <img src="./static/images/teaser.jpg"
+                 class="teaser"
+                 alt="teaser image."/>
+            <p>Generations from Get3DHuman rendered using Blender. 
+              We export generated shapes and visualize them in Blender. 
+              Besides generating 3D textured human models from random codes, 
+              our method also supports re-texturing a given shape (bottom left), 
+              shape and texture interpolation (bottom middle), 
+              and inversion from a given reference image (bottom right).</p>
+      </div>
+    </div>
+    <!--/ teaser. -->
+  </div>
+</section>
+
+
+<section class="section">
+  <div class="container is-max-desktop">
+    <!-- Abstract. -->
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-four-fifths">
+        <h2 class="title is-3">Abstract</h2>
+        <div class="content has-text-justified">
+          <p>
+            Fast generation of high-quality 3D digital humans is important to a vast number of 
+            applications ranging from entertainment to professional concerns. 
+            Recent advances in differentiable rendering have enabled 
+            the training of 3D generative models without requiring 3D ground truths.
+            However, the quality of the generated 3D humans still has much room to 
+            improve in terms of both fidelity and diversity.
+        
+            In this paper, we present Get3DHuman, a novel 3D human framework 
+            that can significantly boost the realism and diversity of the generated outcomes 
+            by only using a limited budget of 3D ground-truth data.
+            Our key observation is that the 3D generator can profit from human-related priors 
+            learned through 2D human generators and 3D reconstructors.
+
+            Specifically, we bridge the latent space of Get3DHuman with that of StyleGAN-Human 
+            via a specially-designed prior network, where the input latent code is mapped to 
+            the shape and texture feature volumes spanned by the pixel-aligned 3D reconstructor 
+            The outcomes of the prior network are then leveraged as the supervisory signals 
+            for the main generator network. To ensure effective training, we further propose 
+            three tailored losses applied to the generated feature volumes and the intermediate feature maps.
+
+            Extensive experiments demonstrate that Get3DHuman greatly outperforms the 
+            other state-of-the-art approaches and can support a wide range of applications 
+            including shape interpolation, shape re-texturing, and single-view reconstruction 
+            through latent inversion.
+          </p>
+        </div>
+      </div>
+    </div>
+    <!--/ Abstract. -->
+  </div>
+</section>
+
+
+<section class="section">
+  <div class="container is-max-desktop">
+    <div class="columns is-centered">
+    <!-- pipeline. -->
+    <div class="columns is-centered">
+      <div class="column is-full-width">
+            <img src="./static/images/pipeline.png"
+                 class="pipeline-image"
+                 alt="pipeline image."/>
+            <p>Overview of our framework. 
+              Our Get3DHuman consists of a shape generator (blue) and a texture generator (orange) 
+              with a refinement module (yellow) that enables nonexistent 3D human creation. 
+              Shape generator responds for generating a high-quality full-body geometry 
+              from a shape code and sends shape features to the texture generator. 
+              Texture generator predicts RGB colors of all points in the 3D space 
+              from a texture code and intermediate shape features.
+              Trainable modules are underlined, including  g<sub>s</sub>, g<sub>sv</sub>, D<sub>sv</sub>, 
+              g<sub>t</sub>, g<sub>tv</sub>, D<sub>tv</sub>, and g<sub>r</sub>. 
+              These seven modules are all trained from scratch.
+              The prior networks (black) only produces supervisory signals for the training of form.
+            </p>
+      </div>
+    </div>
+    <!--/ pipeline. -->
+  </div>
+</section>
+
+
+<section class="section">
+  <div class="container is-max-desktop">
+    <div class="title is-3">Visualization multi-view images rendering by blender.</div>
+    <div class="columns is-centered">
+    <!-- sup_multi_view . -->
+    <div class="columns is-centered">
+      
+      <div class="column is-full-width">
+            <img src="./static/images/sup_multi_view.jpg"
+                 class="sup_multi_view-image"
+                 alt="sup_multi_view image."/>
+      </div>
+    </div>
+    <!--/ sup_multi_view . -->
+  </div>
+</section>
+
+<section class="hero is-light is-small">
+  <div class="hero-body">
+  <div class="columns is-centered">
+    <div class="column">
+      <div class="content">
+        <video poster="" id="2_sample_0" autoplay controls muted loop playsinline height="100%">
+          <source src="./static/videos/2_sample_0.mp4"
+                  type="video/mp4">
+        </video>
+      </div>
+    </div>
+    <div class="column">
+      <div class="columns is-centered">
+        <div class="column content">
+          <video id="2_sample_1-video" autoplay controls muted loop playsinline height="100%">
+            <source src="./static/videos/2_sample_1.mp4"
+                    type="video/mp4">
+          </video>
+        </div>
+  
+      </div>
+    </div>
+  </div>
+</section>
+<!--/ sup_multi_view . -->
+
+
+<!-- sup_inter. -->
+<section class="section">
+  <div class="container is-max-desktop">
+    <h2 class="title is-3">Interpolation examples</h2>
+    <div class="columns is-centered">
+      <div class="column is-full-width">
+            <img src="./static/images/sup_inter_0.jpg"
+                 class="re_texturing"
+                 alt="sup_inter_0 image."/>
+            <p>We randomly sample two sets of shape/texture latent codes to generate the right-/left- most examples, then interpolate both the shape and texture latent codes to generate the in-between examples. 
+            </p>
+      </div>
+    </div>
+  </div>
+</section>
+<section class="hero is-light is-small">
+  <div class="columns is-centered">
+    <div class="column">
+      <div class="content">
+        <video poster="" id="2_sample_0" autoplay controls muted loop playsinline height="100%">
+          <source src="./static/videos/4_inter_0.mp4"
+                  type="video/mp4">
+        </video>
+      </div>
+    </div>
+    <div class="column">
+      <div class="columns is-centered">
+        <div class="column content">
+          <video id="2_sample_1-video" autoplay controls muted loop playsinline height="100%">
+            <source src="./static/videos/4_inter_1.mp4"
+                    type="video/mp4">
+          </video>
+        </div>
+  
+      </div>
+    </div>
+  </div>
+</section>
+<section class="hero is-light is-small">
+  <div class="columns is-centered">
+    <div class="column">
+      <div class="content">
+        <video poster="" id="2_sample_0" autoplay controls muted loop playsinline height="100%">
+          <source src="./static/videos/4_inter_2.mp4"
+                  type="video/mp4">
+        </video>
+      </div>
+    </div>
+    <div class="column">
+      <div class="columns is-centered">
+        <div class="column content">
+          <video id="2_sample_1-video" autoplay controls muted loop playsinline height="100%">
+            <source src="./static/videos/4_inter_3.mp4"
+                    type="video/mp4">
+          </video>
+        </div>
+  
+      </div>
+    </div>
+  </div>
+</section>
+<!-- sup_inter . -->
+
+
+<!-- re_texturing . -->
+<section class="section">
+  <div class="container is-max-desktop">
+    <h2 class="title is-3">Re-texturing examples</h2>
+    <div class="columns is-centered">
+      <div class="column is-full-width">
+            <img src="./static/images/sup_recolor_all.jpg"
+                 class="re_texturing"
+                 alt="re_texturing image."/>
+            <p>Visualization of re-texturing the fixed geometry by different texture latent codes. 
+              We can see different textures are diverse, plausible, and suitable for the given shape since our texture branch is conditioned on shape branch features.
+            </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="hero is-light is-small">
+  <div class="columns is-centered">
+    <div class="column">
+      <div class="content">
+        <video poster="" id="2_sample_0" autoplay controls muted loop playsinline height="100%">
+          <source src="./static/videos/3_recolor_0.mp4"
+                  type="video/mp4">
+        </video>
+      </div>
+    </div>
+    <div class="column">
+      <div class="columns is-centered">
+        <div class="column content">
+          <video id="2_sample_1-video" autoplay controls muted loop playsinline height="100%">
+            <source src="./static/videos/3_recolor_1.mp4"
+                    type="video/mp4">
+          </video>
+        </div>
+  
+      </div>
+    </div>
+  </div>
+</section>
+<section class="hero is-light is-small">
+  <div class="columns is-centered">
+    <div class="column">
+      <div class="content">
+        <video poster="" id="2_sample_0" autoplay controls muted loop playsinline height="100%">
+          <source src="./static/videos/3_recolor_2.mp4"
+                  type="video/mp4">
+        </video>
+      </div>
+    </div>
+    <div class="column">
+      <div class="columns is-centered">
+        <div class="column content">
+          <video id="2_sample_1-video" autoplay controls muted loop playsinline height="100%">
+            <source src="./static/videos/3_recolor_3.mp4"
+                    type="video/mp4">
+          </video>
+        </div>
+  
+      </div>
+    </div>
+  </div>
+</section>
+<!--/ re_texturing . -->
+
+ <!-- Inversion . -->
+<section class="section">
+  <div class="container is-max-desktop">
+    <h2 class="title is-3">Inversion results with two rendering methods</h2>
+    <div class="columns is-centered">
+      <div class="column is-full-width">
+            <img src="./static/images/inversion.png"
+                 class="Inversion"
+                 alt="Inversion image."/>
+            <p>In 2D GAN, inversion refers to find the corresponding latent code that generates a given target (image). 
+              Similarly, we are also searching suitable latent zs, zt for given feature volumes Fsv, Ftv. 
+            </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+ <!-- Inversion . -->
+
+
+<!-- Ablation . -->
+ <section class="section">
+  <div class="container is-max-desktop">
+    <h2 class="title is-3">Ablation study</h2>
+    <div class="columns is-centered">
+    <!-- Ablation . -->
+    <div class="columns is-centered">
+      <div class="column is-full-width">
+            <img src="./static/images/ablation.png"
+                 class="Ablation-image"
+                 alt="Ablation image."/>
+            <p>Ablation study on adversarial losses and prior losses.
+              We compare the human models generated from ''Adv. only'', ''Prior only'', and ''Ours Adv. + Prior''.
+              Ours (Adv. & Prior) produces the best results with plausible details on both the shape and the appearance. The refinement module further improves the appearance.
+            
+            </p>
+      </div>
+    </div>
+    <!--/ Ablation . -->
+  </div>
+</section>
+<!-- Ablation . -->
+<!-- Refine . -->
+<section class="section">
+  <div class="container is-max-desktop">
+    <h2 class="title is-3">Refine module</h2>
+  
+    <div class="columns is-centered">
+      <div class="column is-full-width">
+            <img src="./static/images/refine_module.png"
+                 class="refine_module-image"
+                 alt="refine_module image."/>
+            <p>Ablation on refinement module.
+              Ablation on the refine module. Using the refinement module brings realistic texture details (bottom).
+              "Image" are directly generated from the Pytorch, "Avatar" are rendered from texture models by using Blender.
+            </p>
+      </div>
+    </div>
+  </div>
+</section>
+<!--/ Refine . -->
+
+
+<!-- rendering method . -->
+<section class="section">
+  <div class="container is-max-desktop">
+    <h2 class="title is-3">Rendering methods</h2>
+  
+    <div class="columns is-centered">
+      <div class="column is-full-width">
+            <img src="./static/images/render_method.png"
+                 class="rendering-image"
+                 alt="rendering image."/>
+            <p> In this work, we mainly visualize the results by rendering textured meshes in Blender with lighting (left). 
+              However, Get3DHuman can also render images via PyTorch without lighting (right).
+
+            </p>
+      </div>
+    </div>
+  </div>
+</section>
+<!--/ rendering method . -->
+
+
+
+
+<section class="section" id="BibTeX">
+  <div class="container is-max-desktop content">
+    <h2 class="title">BibTeX</h2>
+    <pre><code>@article{xiong2023Get3DHuman ,
+      author = {Zhangyang Xiong and Di Kang and Derong Jin and Weikai Chen and Linchao Bao and Shuguang Cui and Xiaoguang Han},  
+      title = {Get3DHuman: Lifting StyleGAN-Human into a 3D Generative Model using Pixel-aligned Reconstruction Priors},
+      booktitle={ICCV},
+      year = {2023},
+    }</code></pre>
+  </div>
+</section>
+
+
+<footer class="footer">
+  <div class="container">
+    <div class="columns is-centered">
+          <p>
+            This website is borrowed from <a href="https://github.com/nerfies/nerfies.github.io">nerfies.</a>
+          </p>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>
