@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="description"
+        content="MVHumanNet: A Large-scale Dataset of Multi-view Daily Dressing  Human Captures.">
+  <meta name="keywords" content="3D human capture, Human NeRF reconstruction, Human generation">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>MVHumanNet: A Large-scale Dataset of Multi-view Daily Dressing  Human Captures.</title>
+
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-PYVRSFMDRL"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+
+    function gtag() {
+      dataLayer.push(arguments);
+    }
+
+    gtag('js', new Date());
+
+    gtag('config', 'G-PYVRSFMDRL');
+  </script>
+
+  <link href="https://fonts.googleapis.com/css?family=Google+Sans|Noto+Sans|Castoro"
+        rel="stylesheet">
+
+  <link rel="stylesheet" href="./static/css/bulma.min.css">
+  <link rel="stylesheet" href="./static/css/bulma-carousel.min.css">
+  <link rel="stylesheet" href="./static/css/bulma-slider.min.css">
+  <link rel="stylesheet" href="./static/css/fontawesome.all.min.css">
+  <link rel="stylesheet"
+        href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
+  <link rel="stylesheet" href="./static/css/index.css">
+  <link rel="icon" href="./static/images/favicon.svg">
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script defer src="./static/js/fontawesome.all.min.js"></script>
+  <script src="./static/js/bulma-carousel.min.js"></script>
+  <script src="./static/js/bulma-slider.min.js"></script>
+  <script src="./static/js/index.js"></script>
+</head>
+<body>
+
+<!-- PDF Link. 
+<nav class="navbar" role="navigation" aria-label="main navigation">
+  <div class="navbar-brand">
+    <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false">
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+    </a>
+  </div>
+  <div class="navbar-menu">
+    <div class="navbar-start" style="flex-grow: 1; justify-content: center;">
+      <a class="navbar-item" href="https://x-zhangyang.github.io/">
+      <span class="icon">
+          <i class="fas fa-home"></i>
+      </span>
+      </a>
+
+      <div class="navbar-item has-dropdown is-hoverable">
+        <a class="navbar-link">
+          More Research
+        </a>
+        <div class="navbar-dropdown"> </a>
+          <a class="navbar-item" href="https://github.com/X-zhangyang/Get3DHuman/">
+            Get3DHuman
+          </a>
+          <a class="navbar-item" href="https://github.com/X-zhangyang/Real-World-Masked-Face-Dataset">
+            Masked-Face-Dataset
+          </a>
+          <a class="navbar-item" href="https://github.com/X-zhangyang/Asian-Face-Image-Dataset-AFD-dataset">
+            Aisa-Face-Dataset
+          </a>
+
+        </div>
+      </div>
+    </div>
+
+  </div>
+</nav>
+
+-->
+<section class="hero">
+  <div class="hero-body">
+    <div class="container is-max-desktop">
+      <div class="columns is-centered">
+        <div class="column has-text-centered">
+          <h1 class="title is-3 publication-title">MVHumanNet: A Large-scale Dataset of Multi-view Daily <br />Dressing Human Captures</h1>
+          <div class="is-size-6 publication-authors">
+            <span class="author-block">
+              <a href="https://x-zhangyang.github.io/">Zhangyang Xiong</a><sup>1,2#</sup>,</span>&nbsp
+            <span class="author-block">
+              <a href="https://gaplab.cuhk.edu.cn/">Chenghong Li</a><sup>2#</sup>,</span>&nbsp
+            <span class="author-block">
+              <a href="https://gaplab.cuhk.edu.cn">Kenkun Liu</a><sup>2</sup>,&nbsp
+            </span>
+            <span class="author-block">
+              <a href="https://gaplab.cuhk.edu.cn/">Hongjie Liao</a><sup>2</sup>,&nbsp
+            </span>
+            <span class="author-block">
+              <a href="https://gaplab.cuhk.edu.cn/">Jianqiao Hu</a><sup>2</sup>,&nbsp
+            </span>
+            <span class="author-block">
+              <a href="https://gaplab.cuhk.edu.cn/">Junyi Ju</a><sup>2</sup>,&nbsp
+            </span>
+            <span class="author-block">
+              <a href="https://gaplab.cuhk.edu.cn/">Shuliang Ning</a><sup>2</sup>,&nbsp
+            </span>
+            <span class="author-block">
+              <a href="https://gaplab.cuhk.edu.cn/">Lingteng Wang</a><sup>2</sup>,&nbsp
+            </span>
+            <span class="author-block">
+              <a href="https://gaplab.cuhk.edu.cn/">Shijie Wang</a><sup>2</sup>,&nbsp
+            </span>
+            <span class="author-block">
+              <a href="https://gaplab.cuhk.edu.cn/">Chongjie Hu</a><sup>2</sup>,&nbsp
+            </span>
+            <span class="author-block">
+              <a href="https://sse.cuhk.edu.cn/en/faculty/cuishuguang">Shuguang Cui</a><sup>2,1</sup>,&nbsp
+            </span>
+            <span class="author-block">
+              <a href="https://gaplab.cuhk.edu.cn/">Xiaoguang Han</a><sup>2,1*</sup>
+            </span>
+          </div>
+
+          <div class="is-size-5 publication-authors">
+            <span class="author-block"><sup>1</sup>FNii, CUHKSZ</span>&nbsp&nbsp&nbsp&nbsp
+            <span class="author-block"><sup>2</sup>SSE, CUHKSZ</span>&nbsp&nbsp&nbsp&nbsp
+          </div>
+
+          <div class="is-size-5 publication-authors">
+            <span class="author-block"><sup>#</sup>Corresponding author</span>,&nbsp
+            <span class="author-block"><sup>*</sup>Corresponding author</span>
+          </div>
+
+          <div class="column has-text-centered">
+            <div class="publication-links">
+              <!-- PDF Link. -->
+              <span class="link-block">
+                <a href="https://arxiv.org"
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                      <i class="fas fa-file-pdf"></i>
+                  </span>
+                  <span>Preprint</span>
+                </a>
+              </span>
+              <span class="link-block">
+                <a href="https://gaplab.cuhk.edu.cn/"
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                      <i class="fab fa-github"></i>
+                  </span>
+                  <span>Homepage (Coming soon)</span>
+                  </a>
+              </span>
+
+              <span class="link-block">
+                <a href="https://gaplab.cuhk.edu.cn/"
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                      <i class="far fa-images"></i>
+                  </span>
+                  <span>Data (Coming soon)</span>
+                  </a>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<section class="section">
+  <div class="container is-max-desktop">
+        <video poster="" id="teaser" autoplay controls muted loop playsinline >
+        <source src="./static/videos/0_teaser.mp4"
+                type="video/mp4"></video>
+
+        <p>We introduce <B>MVHumanNet</B>, a large-scale dataset of <B>multi-view human images</B> with unprecedented scale in human subjects, daily outfits, motion sequences and frames.<br />
+          <B>Top left and right</B>: Examples of multi-view poses featuring different human identities with various daily dressing in our dataset. <br />
+        <B>Top middle</B>: Multi-view capture system includes 48 cameras.
+        <B>Bottom</B>: Visualization of all 9000 outfits in MVHumanNet.<br />
+        </p></div>
+  
+    </div>
+    <!--/ teaser. -->
+  </div>
+</section>
+
+<section class="section">
+  <div class="container is-max-desktop">
+    <!-- Abstract. -->
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-four-fifths">
+        <h2 class="title is-3">Abstract</h2>
+        <div class="content has-text-justified">
+          <p>
+            In this era, the success of large language models and text-to-image models can be attributed to the driving force of large-scale datasets. 
+            However, in the realm of 3D vision, while remarkable progress has been made with models trained on large-scale synthetic and real-captured object data like Objaverse and MVImgNet, 
+            a similar level of progress has not been observed in the domain of human-centric tasks partially due to the lack of a large-scale human dataset. 
+            Existing datasets of high-fidelity 3D human capture continue to be mid-sized due to the significant challenges in acquiring large-scale high-quality 3D human data. 
+
+            To bridge this gap, we present <B>MVHumanNet</B>, a dataset that comprises multi-view human action sequences of <B>4,500</B> human identities. 
+            The primary focus of our work is on collecting human data that features a large number of diverse identities and everyday clothing using a multi-view human capture system, 
+            which facilitates easily scalable data collection. Our dataset contains <B>9,000</B> daily outfits, 
+            <B>60,000</B> motion sequences and <B>645 million</B> frames with extensive annotations, including human masks, camera parameters, 
+            2D and 3D keypoints, SMPL/SMPLX parameters, and corresponding textual descriptions. 
+            
+            To explore the potential of MVHumanNet in various 2D and 3D visual tasks, we conducted pilot studies on view-consistent action recognition, human NeRF reconstruction, 
+            text-driven view-unconstrained human image generation, as well as 2D view-unconstrained human image and 3D avatar generation.  
+            Extensive experiments demonstrate the performance improvements and effective applications enabled by the scale provided by MVHumanNet. 
+            As the current largest-scale 3D human dataset, 
+            we hope that the release of MVHumanNet data with annotations will foster further innovations in the domain of 3D human-centric tasks at scale.
+          </p>
+        </div>
+      </div>
+    </div>
+    <!--/ Abstract. -->
+  </div>
+</section>
+
+
+
+<section class="section">
+  <div class="container is-max-desktop">
+    <!-- Abstract. -->
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-four-fifths">
+        <h2 class="title is-3">Multi-view Capture System of 48 Cameras </h2>
+        <video poster="" id="system" autoplay controls muted loop playsinline >
+          <source src="./static/videos/1_system.mp4"
+                  type="video/mp4"></video>
+      </div>
+    </div>
+    <!--/ Abstract. -->
+  </div>
+</section>
+
+<section class="section">
+  <div class="container is-max-desktop">
+    <!-- Abstract. -->
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-four-fifths">
+        <h2 class="title is-2">Dataset </h2>
+       
+      </div>
+    </div>
+    <!--/ Abstract. -->
+  </div>
+</section>
+
+
+<section class="section">
+  <div class="container is-max-desktop">
+    <!-- Abstract. -->
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-four-fifths">
+        <h2 class="title is-4">Fashion Diversity of MVHumanNet  </h2>
+        <video poster="" id="fashion1" autoplay controls muted loop playsinline >
+          <source src="./static/videos/2_fashion_1.mp4"
+                  type="video/mp4"></video>
+      </div>
+    </div>
+    <!--/ Abstract. -->
+  </div>
+</section>
+
+
+<section class="section">
+  <div class="container is-max-desktop">
+    <!-- Abstract. -->
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-four-fifths">
+        <h2 class="title is-4">Action Diversity of MVHumanNet </h2>
+        <video poster="" id="fashion2" autoplay controls muted loop playsinline >
+          <source src="./static/videos/2_fashion_2.mp4"
+                  type="video/mp4"></video>
+      </div>
+    </div>
+    <!--/ Abstract. -->
+  </div>
+</section>
+
+
+<section class="section">
+  <div class="container is-max-desktop">
+    <!-- Abstract. -->
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-four-fifths">
+        <h2 class="title is-4">Annotations of MVHumanNet </h2>
+        <video poster="" id="ann" autoplay controls muted loop playsinline >
+          <source src="./static/videos/3_annot.mp4"
+                  type="video/mp4"></video>
+      </div>
+    </div>
+    <!--/ Abstract. -->
+  </div>
+</section>
+
+
+<section class="section">
+  <div class="container is-max-desktop">
+    <!-- Abstract. -->
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-four-fifths">
+        <h2 class="title is-2">Applications </h2>
+       
+      </div>
+    </div>
+    <!--/ Abstract. -->
+  </div>
+</section>
+
+
+
+<section class="section">
+  <div class="container is-max-desktop">
+    <!-- Abstract. -->
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-four-fifths">
+        <h2 class="title is-4">Image-conditioned NeRF Reconstruction </h2>
+        <video poster="" id="app_nerf" autoplay controls muted loop playsinline >
+          <source src="./static/videos/4_app_nerf.mp4"
+                  type="video/mp4"></video>
+      </div>
+    </div>
+    <!--/ Abstract. -->
+  </div>
+</section>
+
+
+
+<section class="section">
+  <div class="container is-max-desktop">
+    <!-- Abstract. -->
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-four-fifths">
+        <h2 class="title is-4">Text-driven Image Generation </h2>
+        <video poster="" id="app_t2i" autoplay controls muted loop playsinline >
+          <source src="./static/videos/4_app_z1_text2img.mp4"
+                  type="video/mp4"></video>
+      </div>
+    </div>
+    <!--/ Abstract. -->
+  </div>
+</section>
+
+<section class="section">
+  <div class="container is-max-desktop">
+    <!-- Abstract. -->
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-four-fifths">
+        <h2 class="title is-4">Generative Model </h2>
+        <video poster="" id="app_gan" autoplay controls muted loop playsinline >
+          <source src="./static/videos/4_app_z2_gan.mp4"
+                  type="video/mp4"></video>
+          <video poster="" id="app_get3d" autoplay controls muted loop playsinline >
+            <source src="./static/videos/4_app_z3_get3d.mp4"
+                    type="video/mp4"></video>
+      </div>
+    </div>
+    <!--/ Abstract. -->
+  </div>
+</section>
+
+<section class="section" id="BibTeX">
+  <div class="container is-max-desktop content">
+    <h2 class="title">BibTeX</h2>
+    <pre><code>@article{xiong2024MVHumanNet,
+      author = {Zhangyang Xiong, Chenghong Li, Kenkun Liu, Hongjie Liao, Jianqiao HU, Junyi Zhu, Shuliang Ning, Lingteng Qiu, Chongjie Wang, Shijie Wang, Shuguang Cui and Xiaoguang Han},  
+      title = {MVHumanNet: A Large-scale Dataset of Multi-view Daily Dressing Human Captures},
+      booktitle={Arxiv},
+    }</code></pre>
+  </div>
+</section>
+
+
+<footer class="footer">
+  <div class="container">
+    <div class="columns is-centered">
+          <p>
+            This website is borrowed from <a href="https://github.com/nerfies/nerfies.github.io">nerfies.</a>
+          </p>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>
