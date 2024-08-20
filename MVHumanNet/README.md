@@ -2,11 +2,13 @@
 
 If you find MVHumanNet useful for your work please cite:
 ```bibtex
-@inproceedings{xiong2024MVHumanNet,
-  author = {Zhangyang Xiong, Chenghong Li, Kenkun Liu, Hongjie Liao, Jianqiao Hu, Junyi Zhu, Shuliang Ning, Lingteng Qiu, Chongjie Wang, Shijie Wang, Shuguang Cui and Xiaoguang Han},  
-  title = {MVHumanNet: A Large-scale Dataset of Multi-view Daily Dressing Human Captures.},
-  booktitle = {CVPR},
-  year = {2024},
+@InProceedings{Xiong_2024_CVPR,
+    author    = {Xiong, Zhangyang and Li, Chenghong and Liu, Kenkun and Liao, Hongjie and Hu, Jianqiao and Zhu, Junyi and Ning, Shuliang and Qiu, Lingteng and Wang, Chongjie and Wang, Shijie and Cui, Shuguang and Han, Xiaoguang},
+    title     = {MVHumanNet: A Large-scale Dataset of Multi-view Daily Dressing Human Captures},
+    booktitle = {Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR)},
+    month     = {June},
+    year      = {2024},
+    pages     = {19801-19811}
 }
 ```
 
